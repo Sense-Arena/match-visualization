@@ -1,10 +1,8 @@
-/// <reference types="vite-plugin-comlink/client" />
-/// <reference types="vite/client" />
 import { TennisTrade, TennisTradePayload } from '@core/contracts';
 import { attach, combine, forward } from 'effector';
 import { msD } from './api/domain.ms';
 import { extractCombinedKey } from './calculations/operations';
-import workerUrl from './calculations/worker?url';
+import { calcDefaultItemsPositions, convertUnityTradeToState } from './calculations/worker';
 import { $msSettings, addDefaultTrade, setDragItemCoordinates } from './store.ms';
 import { CalcDefaultValuesPayload } from './types';
 
@@ -48,15 +46,13 @@ export const $msUI = msD.createStore<{ trade: TennisTrade; tradeOrder: number }[
   },
 ]);
 
-const calcWorker = new ComlinkWorker<typeof import('./calculations/worker')>(new URL(workerUrl));
-
 const calcUnityValuesAttach = msD.createEffect(async (payload: TennisTradePayload) => {
-  const trade = await calcWorker.convertUnityTradeToState(payload);
+  const trade = convertUnityTradeToState(payload);
   return { trade, tradeOrder: payload.tradeOrder };
 });
 
 const calcDefaultPositionsAttach = msD.createEffect(async (payload: CalcDefaultValuesPayload) => {
-  const trade = await calcWorker.calcDefaultItemsPositions(payload);
+  const trade = calcDefaultItemsPositions(payload);
   return trade;
 });
 

@@ -1,6 +1,7 @@
 {
   "name": "@sensearena/mv",
-  "version": "0.1.5",
+  "version": "0.1.6",
+  "type": "module",
   "files": [
     "dist"
   ],
@@ -39,7 +40,6 @@
     "@vanilla-extract/recipes": "^0.4.0",
     "@vanilla-extract/vite-plugin": "^3.8.2",
     "@vitejs/plugin-react": "3.1.0",
-    "comlink": "^4.4.1",
     "effector": "^22.8.6",
     "effector-react": "^22.5.3",
     "eslint": "^8.43.0",
@@ -52,7 +52,6 @@
     "tslib": "^2.6.0",
     "typescript": "^5.1.3",
     "vite": "^4.3.9",
-    "vite-plugin-comlink": "^3.0.5",
     "vite-plugin-dts": "2.3.0"
   },
   "peerDependencies": {
@@ -65,7 +64,6 @@
     "@sensearena/ui": "^0.2.x",
     "@vanilla-extract/css": "1.x",
     "@vanilla-extract/recipes": "0.x",
-    "comlink": "^4.x",
     "effector": "^22.x",
     "effector-react": "^22.x",
     "perfect-arrows": "^0.x",

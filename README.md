@@ -15,7 +15,6 @@ pnpm add @sensearena/mv
     "@sensearena/ui": "^0.2.x",
     "@vanilla-extract/css": "1.x",
     "@vanilla-extract/recipes": "0.x",
-    "comlink": "^4.x",
     "effector": "^22.x",
     "effector-react": "^22.x",
     "perfect-arrows": "^0.x",
