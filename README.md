@@ -23,3 +23,15 @@ pnpm add @sensearena/mv
     "react-dom": "18.x"
   }
 ```
+
+## Required imgs paths
+
+- `/imgs/tennis-courts/t_court_hard.jpg`
+- `/imgs/tennis-courts/t_court_clay.jpg`
+- `/imgs/tennis-courts/t_court_grass.jpg`
+- `/imgs/tennis-courts/AI.svg`
+- `/imgs/tennis-courts/ball.svg`
+- `/imgs/tennis-courts/cannon.svg`
+- `/imgs/tennis-courts/player.svg`
+
+Files can be downloaded from imgs folder
