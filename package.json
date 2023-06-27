@@ -1,13 +1,13 @@
 {
   "name": "@sensearena/mv",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "files": [
     "dist"
   ],
   "sideEffects": false,
   "main": "./dist/@sa-mv.umd.js",
   "module": "./dist/@sa-mv.es.js",
-  "types": "./dist/models.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/@sa-mv.es.js",
