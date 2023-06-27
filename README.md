@@ -34,3 +34,7 @@ pnpm add @sensearena/mv
 - `/imgs/tennis-courts/player.svg`
 
 Files can be downloaded from imgs folder
+
+## Required polyfill
+
+- `core-js/actual/array/at`
