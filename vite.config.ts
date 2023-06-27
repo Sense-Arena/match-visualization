@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
+import { comlink } from 'vite-plugin-comlink';
 import dts from 'vite-plugin-dts';
 import { peerDependencies } from './package.json';
 
@@ -27,6 +28,7 @@ export default defineConfig(({ mode }) => ({
       skipDiagnostics: false,
       copyDtsFiles: true,
     }),
+    comlink(),
     mode === 'test' &&
       visualizer({
         emitFile: true,
@@ -42,5 +44,8 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       external: [...Object.keys(peerDependencies)],
     },
+  },
+  worker: {
+    plugins: [comlink()],
   },
 }));
