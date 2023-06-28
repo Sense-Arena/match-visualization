@@ -140,6 +140,7 @@ export type CustomDrill = {
   };
   trades: UnityTradeData[];
   units: 'mph' | 'kmh';
+  user_id: string | null;
 };
 
 export type MSSavePayload = MatchSimulationSettingsConfig & {
