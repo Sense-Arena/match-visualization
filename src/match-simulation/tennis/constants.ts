@@ -24,6 +24,7 @@ const settingsDefaultValues: MatchSimulationSettingsConfig = {
   age_category_id: '',
   wind_direction: TennisWindDirection.North,
   units: 'mph',
+  source: 'user',
 };
 
 export const mcs = {
