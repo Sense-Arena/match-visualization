@@ -34,7 +34,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.13.6",
     "@react-spring/web": "9.7.2",
-    "@sensearena/ui": "^0.2.50",
+    "@sensearena/ui": "^0.2.51",
     "@storybook/addon-essentials": "^7.0.24",
     "@storybook/addon-interactions": "^7.0.24",
     "@storybook/addon-links": "^7.0.24",

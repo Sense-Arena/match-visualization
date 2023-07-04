@@ -30,8 +30,8 @@ devDependencies:
     specifier: 9.7.2
     version: 9.7.2(react-dom@18.2.0)(react@18.2.0)
   '@sensearena/ui':
-    specifier: ^0.2.50
-    version: 0.2.50(@react-spring/web@9.7.2)(@vanilla-extract/css@1.11.1)(@vanilla-extract/recipes@0.4.0)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.2.51
+    version: 0.2.51(@react-spring/web@9.7.2)(@vanilla-extract/css@1.11.1)(@vanilla-extract/recipes@0.4.0)(react-dom@18.2.0)(react@18.2.0)
   '@storybook/addon-essentials':
     specifier: ^7.0.24
     version: 7.0.24(react-dom@18.2.0)(react@18.2.0)
@@ -3612,8 +3612,8 @@ packages:
       string-argv: 0.3.2
     dev: true
 
-  /@sensearena/ui@0.2.50(@react-spring/web@9.7.2)(@vanilla-extract/css@1.11.1)(@vanilla-extract/recipes@0.4.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-/2EcR0ENCn4AVyH7gISE8RMtoBEvkBYDHxjetHCIbf+52JRJ5LKJXy0zZd7mvDh2/HOc/otmnIGzpCcy/iIVgQ==}
+  /@sensearena/ui@0.2.51(@react-spring/web@9.7.2)(@vanilla-extract/css@1.11.1)(@vanilla-extract/recipes@0.4.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-KioEORqZVXJkWQC5N80IA1RZn4uwKpG4Ik+KJ4TDn/DpUa6zEBGGNb+97t6CgbVP5yHxW8nfdAVNo1wd2fYHMg==}
     peerDependencies:
       '@react-spring/web': 9.7.2
       '@vanilla-extract/css': 1.11.1
