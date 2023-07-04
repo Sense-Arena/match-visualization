@@ -53,14 +53,3 @@ jobs:
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.UI_NPM }}
-
-      - name: Prepare Deploy for Storybook 🚀
-        run: |
-          rm -rf ./dist
-          pnpm build-storybook
-          touch ./storybook-static/.nojekyll
-      - name: Deploy Storybook 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: storybook-static # The folder the action should deploy.

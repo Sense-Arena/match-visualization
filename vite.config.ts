@@ -43,5 +43,4 @@ export default defineConfig(({ mode }) => ({
       external: [...Object.keys(peerDependencies)],
     },
   },
-  mode,
 }));
