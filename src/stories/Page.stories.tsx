@@ -1,5 +1,5 @@
 import { StartType } from '@core/contracts';
-import { Card } from '@sensearena/ui';
+import { Card, noop } from '@sensearena/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { PropsWithChildren, useEffect } from 'react';
 import {
@@ -43,7 +43,7 @@ export const Base: Story = {
     createMS: () => Promise.resolve(),
     editMS: () => Promise.resolve(),
     loading: false,
-    goBack: () => {},
+    goBack: noop,
   },
   render: args => (
     <Wrap>

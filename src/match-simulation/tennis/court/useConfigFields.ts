@@ -77,7 +77,9 @@ export const usePlayerConfigFields = () => {
   const prepareSelectFields = useMemo<
     | {
         [k in keyof PlayerCfgPayload]: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ops: any[];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dv: any;
         };
       }
@@ -181,7 +183,9 @@ export const useOpponentConfigFields = () => {
   const prepareSelectFields = useMemo<
     | {
         [k in keyof OpponentCfgPayload]: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ops: any[];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           dv: any;
         };
       }

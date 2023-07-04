@@ -59,7 +59,7 @@ export const PlayerConfigForm = memo(() => {
             key={sfk}
             label={capitalizeFirstLetter(sfk.replace('_', ' '))}
             selectedOption={renderValue}
-            selectedOptionLabel={preparedSelectFields[sfk]?.ops.find((o: any) => o.value === renderValue)?.title ?? ''}
+            selectedOptionLabel={preparedSelectFields[sfk]?.ops.find(o => o.value === renderValue)?.title ?? ''}
             options={preparedSelectFields[sfk]?.ops ?? []}
             value={renderValue}
             onChangeSelect={value =>

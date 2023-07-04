@@ -66,7 +66,7 @@ export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading
     }
     forwardCourtStep(predefinedCourtSteps[settings.type].slice(prevStepsLength)[0]);
     document.getElementById(oppSideId)?.scrollIntoView({ behavior: 'smooth' });
-  }, [settings, prevStepsLength, canSave]);
+  }, [canSave, settings.type, prevStepsLength, tradeOrder]);
 
   const onSave = useCallback(async () => {
     if (id) {
