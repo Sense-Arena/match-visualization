@@ -1,4 +1,4 @@
-name: Run tests
+name: Code Checks
 
 on:
   pull_request:
@@ -6,26 +6,49 @@ on:
       - main
 
 jobs:
-  test:
+  run-linters:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x]
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Checkout 🛎️
+      - name: Checkout
         uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
         with:
-          version: 8
-      - name: Use Node.js ${{ matrix.node-version }}
+          persist-credentials: false
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: install and build
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-route
+        shell: bash
         run: |
-          pnpm install
-          pnpm build
+          echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules-v1
+        with:
+          path: ${{ steps.pnpm-route.outputs.PNPM_STORE_PATH }}
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+
+      - name: Install Node modules
+        run: pnpm i
+
+      - name: Run linters
+        run: pnpm lint
+
+      - name: Run build
+        run: pnpm build
