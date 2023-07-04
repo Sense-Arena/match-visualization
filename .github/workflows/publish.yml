@@ -36,6 +36,7 @@ jobs:
         run: |
           rm -rf ./dist
           pnpm build-storybook
+          touch ./storybook-static/.nojekyll
       - name: Deploy Storybook 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
