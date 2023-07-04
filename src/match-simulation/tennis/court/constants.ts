@@ -2,6 +2,7 @@ import {
   MatchSimulationSettingsConfig,
   TennisMatchServeRotation,
   TennisMatchShotType,
+  TennisMatchSituationType,
   TennisMatchStrikeApproach,
   TennisMatchStrikeType,
   TennisMatchStrikeZone,
@@ -55,6 +56,10 @@ export const strikeZoneOps: { title: string; value: PlayerCfgPayload['strike_zon
 
 export const shotTypeOps = objKeys(TennisMatchShotType).map(key => ({ title: key, value: TennisMatchShotType[key] }));
 export const strikeTypeOps = objKeys(TennisMatchStrikeType).map(key => ({ title: key, value: TennisMatchStrikeType[key] }));
+export const situationTypeOps = objKeys(TennisMatchSituationType).map(key => ({
+  title: key,
+  value: TennisMatchSituationType[key],
+}));
 export const serveRotationOps = objKeys(TennisMatchServeRotation).map(key => ({
   title: key,
   value: TennisMatchServeRotation[key],

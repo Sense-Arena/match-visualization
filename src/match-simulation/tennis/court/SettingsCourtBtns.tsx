@@ -1,10 +1,13 @@
 import { MSSavePayload, TennisMatchWind } from '@core/contracts';
-import { Button, Stack, StackItem, useMQuery } from '@sensearena/ui';
+import { Button, ButtonGroup } from '@sensearena/ui';
 import { useStoreMap } from 'effector-react';
 import { memo, useCallback } from 'react';
-import { predefinedCourtSteps } from '../constants';
+import { extractCombinedKey } from '../calculations/operations';
+import { additionalTradeData, maxTennisTrades, predefinedCourtSteps, stepHints } from '../constants';
 import { $msSettings, backCourtStep, forwardCourtStep, setMSStep } from '../store.ms';
+import { CombinedTradeKey } from '../types';
 import { oppSideId } from './constants';
+import { stStyles } from './st.css';
 
 export type SettingsCourtBtnsProps = {
   id?: string;
@@ -15,15 +18,21 @@ export type SettingsCourtBtnsProps = {
 };
 
 export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading, id, createMS, editMS }) => {
-  const lessThan370px = useMQuery('screen and (max-width: 370px)');
-  const { settings, prevStepsLength, trades } = useStoreMap({
+  const { settings, prevStepsLength, trades, canSave, tradeOrder, isLastTradeStep } = useStoreMap({
     store: $msSettings,
     keys: [],
-    fn: state => ({
-      settings: state.settings,
-      prevStepsLength: state.courtStepsHistory.length,
-      trades: state.unityTradesA,
-    }),
+    fn: state => {
+      const { tradeOrder, courtStep } = extractCombinedKey(state.courtStepsHistory.at(-1));
+
+      return {
+        settings: state.settings,
+        prevStepsLength: state.courtStepsHistory.length,
+        trades: state.unityTradesA,
+        canSave: predefinedCourtSteps[state.settings.type].length === state.courtStepsHistory.length,
+        tradeOrder,
+        isLastTradeStep: tradeOrder === maxTennisTrades + 1 && courtStep === 'ball_move',
+      };
+    },
   });
 
   const onBack = useCallback(() => {
@@ -37,42 +46,71 @@ export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading
   }, [prevStepsLength]);
 
   const onForward = useCallback(async () => {
-    if (predefinedCourtSteps[settings.type].length === prevStepsLength) {
-      if (id) {
-        await editMS({
-          ...settings,
-          wind: settings.wind === TennisMatchWind.None ? null : settings.wind,
-          trades,
-          id,
-        });
-      } else {
-        await createMS({
-          ...settings,
-          wind: settings.wind === TennisMatchWind.None ? null : settings.wind,
-          trades,
-        });
-      }
-      goBack();
-
-      return;
+    if (canSave) {
+      const newDataToAdd = additionalTradeData.steps.map((v, index) => {
+        const ck = extractCombinedKey(v);
+        const step = `${ck.courtStep}__trades-${ck.tradeOrder + tradeOrder}` as CombinedTradeKey;
+        return {
+          step,
+          info: additionalTradeData.infos[index],
+        };
+      });
+      predefinedCourtSteps[settings.type] = predefinedCourtSteps[settings.type].concat(newDataToAdd.map(v => v.step));
+      stepHints[settings.type] = {
+        ...stepHints[settings.type],
+        ...newDataToAdd.reduce((acc, next) => {
+          acc[next.step] = next.info;
+          return acc;
+        }, {} as Record<CombinedTradeKey, string>),
+      };
     }
     forwardCourtStep(predefinedCourtSteps[settings.type].slice(prevStepsLength)[0]);
     document.getElementById(oppSideId)?.scrollIntoView({ behavior: 'smooth' });
-  }, [settings, prevStepsLength, id, goBack, editMS, trades, createMS]);
+  }, [settings, prevStepsLength, canSave]);
+
+  const onSave = useCallback(async () => {
+    if (id) {
+      await editMS({
+        ...settings,
+        wind: settings.wind === TennisMatchWind.None ? null : settings.wind,
+        trades,
+        id,
+      });
+    } else {
+      await createMS({
+        ...settings,
+        wind: settings.wind === TennisMatchWind.None ? null : settings.wind,
+        trades,
+      });
+    }
+    goBack();
+
+    return;
+  }, [settings, id, goBack, editMS, trades, createMS]);
 
   return (
-    <Stack direction={lessThan370px ? 'column' : 'row'} alignItems="center" justifyContent="center">
-      <StackItem direction={lessThan370px ? 'column' : 'row'} spacing={1}>
-        <Button mode="square" color="secondary" onClick={onBack} disabled={loading}>
-          back
+    <ButtonGroup className={stStyles.btnsGroup}>
+      <Button size="s" mode="square" color="secondary" onClick={onBack} disabled={loading}>
+        back
+      </Button>
+      {canSave ? (
+        <Button
+          size="s"
+          mode="square"
+          color="secondary_action"
+          onClick={onSave}
+          loading={loading}
+          style={{ textTransform: 'uppercase' }}
+        >
+          save
         </Button>
-      </StackItem>
-      <StackItem direction={lessThan370px ? 'column' : 'row'} spacing={1}>
-        <Button mode="square" onClick={onForward} loading={loading}>
-          {predefinedCourtSteps[settings.type].length === prevStepsLength ? 'save' : 'next'}
+      ) : null}
+      {isLastTradeStep ? null : (
+        <Button size="s" mode="square" onClick={onForward} loading={loading}>
+          next
         </Button>
-      </StackItem>
-    </Stack>
+      )}
+    </ButtonGroup>
   );
 });
 

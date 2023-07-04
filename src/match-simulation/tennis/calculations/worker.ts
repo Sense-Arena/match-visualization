@@ -101,98 +101,9 @@ export const calcDefaultItemsPositions = ({
 }: CalcDefaultValuesPayload): UnityTradeData | null => {
   switch (startType) {
     case StartType.Serve:
-    case StartType.Rally:
-      switch (tradeOrder) {
-        case 1: {
-          if (startType === StartType.Serve) {
-            return {
-              order: tradeOrder,
-              config: {
-                player: {
-                  position: [5, 0, -12],
-                },
-                ball: {
-                  position: [3.5, 0, 5.5],
-                },
-                opponent: {
-                  position: [-5, 0, 12],
-                },
-              },
-            };
-          }
-          return {
-            order: tradeOrder,
-            config: {
-              player: {
-                position: [5, 0, -12],
-              },
-              cannon: {
-                position: [6.5, 0, -8],
-              },
-              ball: {
-                position: [0, 0, 6.3],
-              },
-              opponent: {
-                position: [-5, 0, 12],
-              },
-            },
-          };
-        }
-        case 2: {
-          const ts1 = trades.find(t => t.order === 1);
-          if (!ts1) return null;
-
-          const oppNewPos = calcOpponentPosition({
-            trade: ts1.config,
-            isCannon: startType === StartType.Rally,
-          });
-
-          return {
-            order: tradeOrder,
-            config: {
-              player: {
-                position: ts1.config.player.position,
-              },
-              ball: {
-                position: ts1.config.ball.position,
-              },
-              opponent: {
-                position: [oppNewPos.x, 0, oppNewPos.z],
-              },
-            },
-          };
-        }
-        case 3: {
-          const ts2 = trades.find(t => t.order === 2);
-          if (!ts2) return null;
-
-          const { playerNewPos } = calcPlayerPosition({
-            trade: ts2.config,
-          });
-
-          return {
-            order: tradeOrder,
-            config: {
-              player: {
-                position: [playerNewPos.x, 0, playerNewPos.z],
-              },
-              ball: {
-                position: ts2.config.ball.position,
-              },
-              opponent: {
-                position: ts2.config.opponent.position,
-              },
-            },
-          };
-        }
-
-        default:
-          return null;
-      }
-
-    case StartType.Return:
-      switch (tradeOrder) {
-        case 1:
+    case StartType.Rally: {
+      if (tradeOrder === 1) {
+        if (startType === StartType.Serve) {
           return {
             order: tradeOrder,
             config: {
@@ -200,81 +111,134 @@ export const calcDefaultItemsPositions = ({
                 position: [5, 0, -12],
               },
               ball: {
-                position: [-3.5, 0, -5.5],
+                position: [3.5, 0, 5.5],
               },
               opponent: {
                 position: [-5, 0, 12],
               },
             },
           };
-        case 2: {
-          const ts1 = trades.find(t => t.order === 1);
-          if (!ts1) return null;
-          const { playerNewPos } = calcPlayerPosition({
-            trade: ts1.config,
-          });
-
-          return {
-            order: tradeOrder,
-            config: {
-              player: {
-                position: [playerNewPos.x, 0, playerNewPos.z],
-              },
-              ball: {
-                position: ts1.config.ball.position,
-              },
-              opponent: {
-                position: ts1.config.opponent.position,
-              },
-            },
-          };
         }
-        case 3: {
-          const ts2 = trades.find(t => t.order === 2);
-          if (!ts2) return null;
-          const oppNewPos = calcOpponentPosition({ trade: ts2.config, isCannon: false });
-
-          return {
-            order: tradeOrder,
-            config: {
-              player: {
-                position: ts2.config.player.position,
-              },
-              ball: {
-                position: ts2.config.ball.position,
-              },
-              opponent: {
-                position: [oppNewPos.x, 0, oppNewPos.z],
-              },
+        return {
+          order: tradeOrder,
+          config: {
+            player: {
+              position: [5, 0, -12],
             },
-          };
-        }
-
-        case 4: {
-          const ts3 = trades.find(t => t.order === 3);
-          if (!ts3) return null;
-          const { playerNewPos } = calcPlayerPosition({
-            trade: ts3.config,
-          });
-
-          return {
-            order: tradeOrder,
-            config: {
-              player: {
-                position: [playerNewPos.x, 0, playerNewPos.z],
-              },
-              ball: {
-                position: ts3.config.ball.position,
-              },
-              opponent: {
-                position: ts3.config.opponent.position,
-              },
+            cannon: {
+              position: [6.5, 0, -8],
             },
-          };
-        }
-
-        default:
-          return null;
+            ball: {
+              position: [0, 0, 6.3],
+            },
+            opponent: {
+              position: [-5, 0, 12],
+            },
+          },
+        };
       }
+
+      const prevTs = trades.find(t => t.order === tradeOrder - 1);
+      if (!prevTs) return null;
+      if (tradeOrder % 2 === 0) {
+        const oppNewPos = calcOpponentPosition({
+          trade: prevTs.config,
+          isCannon: startType === StartType.Rally,
+        });
+
+        return {
+          order: tradeOrder,
+          config: {
+            player: {
+              position: prevTs.config.player.position,
+            },
+            ball: {
+              position: prevTs.config.ball.position,
+            },
+            opponent: {
+              position: [oppNewPos.x, 0, oppNewPos.z],
+            },
+          },
+        };
+      } else {
+        const { playerNewPos } = calcPlayerPosition({
+          trade: prevTs.config,
+        });
+
+        return {
+          order: tradeOrder,
+          config: {
+            player: {
+              position: [playerNewPos.x, 0, playerNewPos.z],
+            },
+            ball: {
+              position: prevTs.config.ball.position,
+            },
+            opponent: {
+              position: prevTs.config.opponent.position,
+            },
+          },
+        };
+      }
+    }
+
+    case StartType.Return: {
+      if (tradeOrder === 1) {
+        return {
+          order: tradeOrder,
+          config: {
+            player: {
+              position: [5, 0, -12],
+            },
+            ball: {
+              position: [-3.5, 0, -5.5],
+            },
+            opponent: {
+              position: [-5, 0, 12],
+            },
+          },
+        };
+      }
+      const prevTs = trades.find(t => t.order === tradeOrder - 1);
+      if (!prevTs) return null;
+
+      if (tradeOrder % 2 === 0) {
+        const { playerNewPos } = calcPlayerPosition({
+          trade: prevTs.config,
+        });
+
+        return {
+          order: tradeOrder,
+          config: {
+            player: {
+              position: [playerNewPos.x, 0, playerNewPos.z],
+            },
+            ball: {
+              position: prevTs.config.ball.position,
+            },
+            opponent: {
+              position: prevTs.config.opponent.position,
+            },
+          },
+        };
+      } else {
+        const oppNewPos = calcOpponentPosition({ trade: prevTs.config, isCannon: false });
+
+        return {
+          order: tradeOrder,
+          config: {
+            player: {
+              position: prevTs.config.player.position,
+            },
+            ball: {
+              position: prevTs.config.ball.position,
+            },
+            opponent: {
+              position: [oppNewPos.x, 0, oppNewPos.z],
+            },
+          },
+        };
+      }
+    }
   }
 };

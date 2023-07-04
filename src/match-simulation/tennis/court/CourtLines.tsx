@@ -30,69 +30,57 @@ export const CourtLines = memo<Props>(({ width, height, trade }) => {
   const lines = useMemo(() => {
     switch (startType) {
       case StartType.Rally:
-      case StartType.Serve:
-        switch (tradeOrder) {
-          case 1: {
-            if (startType === StartType.Serve) {
-              return {
-                x1: coords.player.x + mcs.TShirtXOffset,
-                y1: coords.player.y + mcs.TShirtYOffset,
-                x2: coords.ball.x + mcs.ballHalfSize,
-                y2: coords.ball.y + mcs.ballSize,
-              };
-            }
-
+      case StartType.Serve: {
+        if (tradeOrder === 1) {
+          if (startType === StartType.Serve) {
             return {
-              x1: coords.cannon.x + mcs.CannonXOffset,
-              y1: coords.cannon.y + mcs.CannonYOffset,
+              x1: coords.player.x + mcs.TShirtXOffset,
+              y1: coords.player.y + mcs.TShirtYOffset,
               x2: coords.ball.x + mcs.ballHalfSize,
               y2: coords.ball.y + mcs.ballSize,
             };
           }
 
-          case 2:
-            return {
-              x1: coords.opponent.x + mcs.TShirtXOffset,
-              y1: coords.opponent.y + mcs.TShirtYOffset,
-              x2: coords.ball.x + mcs.ballHalfSize,
-              y2: coords.ball.y,
-            };
-
-          case 3:
-            return {
-              x1: coords.player.x + mcs.TShirtXOffset,
-              y1: coords.player.y + mcs.TShirtYOffset,
-              x2: coords.ball.x + mcs.ballHalfSize,
-              y2: coords.ball.y + mcs.ballSize,
-            };
-
-          default:
-            return null;
+          return {
+            x1: coords.cannon.x + mcs.CannonXOffset,
+            y1: coords.cannon.y + mcs.CannonYOffset,
+            x2: coords.ball.x + mcs.ballHalfSize,
+            y2: coords.ball.y + mcs.ballSize,
+          };
         }
+
+        if (tradeOrder % 2 === 0) {
+          return {
+            x1: coords.opponent.x + mcs.TShirtXOffset,
+            y1: coords.opponent.y + mcs.TShirtYOffset,
+            x2: coords.ball.x + mcs.ballHalfSize,
+            y2: coords.ball.y,
+          };
+        } else {
+          return {
+            x1: coords.player.x + mcs.TShirtXOffset,
+            y1: coords.player.y + mcs.TShirtYOffset,
+            x2: coords.ball.x + mcs.ballHalfSize,
+            y2: coords.ball.y + mcs.ballSize,
+          };
+        }
+      }
       case StartType.Return:
-        switch (tradeOrder) {
-          case 1:
-          case 3:
-            return {
-              x1: coords.opponent.x + mcs.TShirtXOffset,
-              y1: coords.opponent.y + mcs.TShirtYOffset,
-              x2: coords.ball.x + mcs.ballHalfSize,
-              y2: coords.ball.y,
-            };
-
-          case 2:
-          case 4:
-            return {
-              x1: coords.player.x + mcs.TShirtXOffset,
-              y1: coords.player.y + mcs.TShirtYOffset,
-              x2: coords.ball.x + mcs.ballHalfSize,
-              y2: coords.ball.y + mcs.ballSize,
-            };
-
-          default:
-            return null;
+        if (tradeOrder % 2 === 0) {
+          return {
+            x1: coords.player.x + mcs.TShirtXOffset,
+            y1: coords.player.y + mcs.TShirtYOffset,
+            x2: coords.ball.x + mcs.ballHalfSize,
+            y2: coords.ball.y + mcs.ballSize,
+          };
+        } else {
+          return {
+            x1: coords.opponent.x + mcs.TShirtXOffset,
+            y1: coords.opponent.y + mcs.TShirtYOffset,
+            x2: coords.ball.x + mcs.ballHalfSize,
+            y2: coords.ball.y,
+          };
         }
-
       default:
         return null;
     }

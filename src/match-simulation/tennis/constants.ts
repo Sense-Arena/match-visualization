@@ -10,7 +10,7 @@ import {
 } from '@core/contracts';
 import { CombinedTradeKey, MSSettingsState } from './types';
 
-const settingsDefaultValues: MatchSimulationSettingsConfig = {
+export const settingsDefaultValues: MatchSimulationSettingsConfig = {
   title: '',
   daytime: MatchDaytime.Noon,
   duration: 10,
@@ -69,6 +69,27 @@ export const defaultMSDraft: MSSettingsState = {
   banned: false,
 };
 
+export const additionalTradeData: {
+  steps: CombinedTradeKey[];
+  infos: string[];
+} = {
+  steps: [
+    'opponent_config__trades-0',
+    'player_move__trades-1',
+    'ball_move__trades-1',
+    'player_config__trades-1',
+    'opponent_move__trades-2',
+    'ball_move__trades-2',
+  ],
+  infos: [
+    'Set up how your opponent reacts to your return',
+    'Set up where I move after the return',
+    'Set up where your opponent places the shot',
+    'Now set your reaction up',
+    'Set up where your opponent goes after his return',
+    'Place the ball where I should place my shot',
+  ],
+};
 export const predefinedCourtSteps: Record<StartType, CombinedTradeKey[]> = {
   serve: [
     'player_move__trades-1',
@@ -110,13 +131,54 @@ export const predefinedCourtSteps: Record<StartType, CombinedTradeKey[]> = {
   ],
 };
 
+export const stepHints: Record<StartType, Record<CombinedTradeKey, string>> = {
+  serve: {
+    'player_move__trades-1': 'Place your jersey to the serve position',
+    'player_config__trades-1': 'Set up your Serve number and Serve speed',
+    'ball_move__trades-1': 'Place the ball in the serving square on your opponent’s side',
+    'opponent_move__trades-1': 'Set up your opponent’s return position by dragging the blue jersey',
+    'opponent_config__trades-1': 'Set up your opponent’s Shot type, Strike type and Situation type',
+    'player_move__trades-2': 'Now set up where I go after my serve',
+    'ball_move__trades-2': 'Set up the placement of the opponent’s return',
+    'player_config__trades-2': 'Now set your reaction up',
+    'opponent_move__trades-3': 'Set up where your opponent goes after his return',
+    'ball_move__trades-3': 'Place the ball where I should place my shot',
+  },
+  ret: {
+    'opponent_move__trades-1': 'Choose your opponent’s serve position',
+    'opponent_config__trades-1': 'Set your opponent’s serve up',
+    'ball_move__trades-1': 'Set up your opponent’s serve ball placement',
+    'player_move__trades-1': 'Drag the yellow jersey to the position where you want to receive the serve',
+    'player_config__trades-1': 'Set up how you want to react to the serve',
+    'opponent_move__trades-2': 'Set up where your opponent moves after serve',
+    'ball_move__trades-2': 'Place the ball where I want to return',
+    'opponent_config__trades-2': 'Set up how your opponent reacts to your return',
+    'player_move__trades-3': 'Set up where I move after the return',
+    'ball_move__trades-3': 'Set up where your opponent places the shot',
+    'player_config__trades-3': 'Set up your reaction',
+    'opponent_move__trades-4': 'Set up the spot where your opponent moves',
+    'ball_move__trades-4': 'Place your shot by dragging the ball in the position',
+  },
+  rally: {
+    'player_move__trades-1': 'Set up my starting position',
+    'opponent_move__trades-1': 'Set up your opponent’s starting position',
+    'cannon_move__trades-1': 'Set up cannon’s position. Don’t worry, it will go away after first shot',
+    'ball_move__trades-1': 'Set up my shot placement',
+    'opponent_config__trades-1': 'Set up your shot',
+    'ball_move__trades-2': 'Set up your opponent’s ball placement',
+    'player_config__trades-2': 'Set up your shot through the options',
+    'opponent_move__trades-3': 'Set up where your opponent goes after the shot',
+    'ball_move__trades-3': 'Set up my shot placement',
+  },
+};
+
 export const opponentHeightOps = [
   {
-    title: '6′9″ (210cm)',
+    title: '6′11″ (210cm)',
     value: 210,
   },
   {
-    title: '6′6″ (200cm)',
+    title: '6′7″ (200cm)',
     value: 200,
   },
   {
@@ -124,11 +186,11 @@ export const opponentHeightOps = [
     value: 190,
   },
   {
-    title: '5′9″ (180cm)',
+    title: '5′11″ (180cm)',
     value: 180,
   },
   {
-    title: '5′6″ (170cm)',
+    title: '5′7″ (170cm)',
     value: 170,
   },
 ];
@@ -232,3 +294,5 @@ export const unitsOps: { title: string; value: MatchSimulationSettingsConfig['un
     value: 'kmh',
   },
 ];
+
+export const maxTennisTrades = 20;

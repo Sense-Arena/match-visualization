@@ -14,6 +14,7 @@ import { DraggableAI } from './DraggableAI';
 import { DraggableBall } from './DraggableBall';
 import { DraggableCannon } from './DraggableCannon';
 import { DraggablePlayer } from './DraggablePlayer';
+import { HintBtn } from './HintBtn';
 import { stStyles } from './st.css';
 import { useTradesDefault } from './useTradesDefault';
 
@@ -218,6 +219,7 @@ export const ActionableCourt = memo(() => {
       <DraggableCannon x={info.trade.coords.cannon.x} y={info.trade.coords.cannon.y} />
 
       <CourtLoading />
+      <HintBtn />
     </DndContext>
   );
 });

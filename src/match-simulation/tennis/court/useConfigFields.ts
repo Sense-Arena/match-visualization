@@ -2,6 +2,7 @@ import {
   StartType,
   TennisMatchServeRotation,
   TennisMatchShotType,
+  TennisMatchSituationType,
   TennisMatchStrikeApproach,
   TennisMatchStrikeType,
   TennisMatchStrikeZone,
@@ -16,6 +17,7 @@ import {
   serveRotationOps,
   serveSpeedOps,
   shotTypeOps,
+  situationTypeOps,
   strikeAppOps,
   strikeTypeOps,
   strikeZoneOps,
@@ -58,14 +60,14 @@ const useServeSpeedOps = () => {
 };
 
 export const usePlayerConfigFields = () => {
-  const { startType, tradeKey } = useStoreMap({
+  const { startType, tradeOrder } = useStoreMap({
     store: $msSettings,
     keys: [],
     fn: state => {
-      const { tradeKey } = extractCombinedKey(state.courtStepsHistory.at(-1));
+      const { tradeOrder } = extractCombinedKey(state.courtStepsHistory.at(-1));
       return {
         startType: state.settings.type,
-        tradeKey,
+        tradeOrder,
       };
     },
   });
@@ -82,114 +84,94 @@ export const usePlayerConfigFields = () => {
     | null
   >(() => {
     switch (startType) {
-      case StartType.Serve:
-        switch (tradeKey) {
-          case 'trades-1':
-            return {
-              serve_number: {
-                ops: serveOps,
-                dv: 1,
-              },
-              serve_speed: {
-                ops: ssOps,
-                dv: ssOps[0].value,
-              },
-            };
-
-          case 'trades-2':
-            return {
-              strike_approach: {
-                ops: strikeAppOps,
-                dv: TennisMatchStrikeApproach.AfterBounce,
-              },
-              strike_zone: {
-                ops: strikeZoneOps,
-                dv: TennisMatchStrikeZone.Comfort,
-              },
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-            };
-
-          default:
-            return null;
-        }
-      case StartType.Return:
-        switch (tradeKey) {
-          case 'trades-1':
-            return {
-              strike_approach: {
-                ops: strikeAppOps,
-                dv: TennisMatchStrikeApproach.AfterBounce,
-              },
-              strike_zone: {
-                ops: strikeZoneOps,
-                dv: TennisMatchStrikeZone.Comfort,
-              },
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-            };
-
-          case 'trades-3':
-            return {
-              strike_approach: {
-                ops: strikeAppOps,
-                dv: TennisMatchStrikeApproach.AfterBounce,
-              },
-              strike_zone: {
-                ops: strikeZoneOps,
-                dv: TennisMatchStrikeZone.Comfort,
-              },
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-            };
-
-          default:
-            return null;
+      case StartType.Serve: {
+        if (tradeOrder === 1) {
+          return {
+            serve_number: {
+              ops: serveOps,
+              dv: 1,
+            },
+            serve_speed: {
+              ops: ssOps,
+              dv: ssOps[0].value,
+            },
+          };
         }
 
-      case StartType.Rally:
-        switch (tradeKey) {
-          case 'trades-2':
-            return {
-              strike_approach: {
-                ops: strikeAppOps,
-                dv: TennisMatchStrikeApproach.AfterBounce,
-              },
-              strike_zone: {
-                ops: strikeZoneOps,
-                dv: TennisMatchStrikeZone.Comfort,
-              },
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-            };
-
-          default:
-            return null;
+        if (tradeOrder % 2 === 0) {
+          return {
+            strike_approach: {
+              ops: strikeAppOps,
+              dv: TennisMatchStrikeApproach.AfterBounce,
+            },
+            strike_zone: {
+              ops: strikeZoneOps,
+              dv: TennisMatchStrikeZone.Comfort,
+            },
+            shot_type: {
+              ops: shotTypeOps,
+              dv: TennisMatchShotType.Forehand,
+            },
+          };
         }
+
+        return null;
+      }
+      case StartType.Return: {
+        if (tradeOrder % 2 !== 0) {
+          return {
+            strike_approach: {
+              ops: strikeAppOps,
+              dv: TennisMatchStrikeApproach.AfterBounce,
+            },
+            strike_zone: {
+              ops: strikeZoneOps,
+              dv: TennisMatchStrikeZone.Comfort,
+            },
+            shot_type: {
+              ops: shotTypeOps,
+              dv: TennisMatchShotType.Forehand,
+            },
+          };
+        }
+        return null;
+      }
+
+      case StartType.Rally: {
+        if (tradeOrder % 2 === 0) {
+          return {
+            strike_approach: {
+              ops: strikeAppOps,
+              dv: TennisMatchStrikeApproach.AfterBounce,
+            },
+            strike_zone: {
+              ops: strikeZoneOps,
+              dv: TennisMatchStrikeZone.Comfort,
+            },
+            shot_type: {
+              ops: shotTypeOps,
+              dv: TennisMatchShotType.Forehand,
+            },
+          };
+        }
+        return null;
+      }
     }
-  }, [startType, tradeKey, ssOps]);
+  }, [startType, tradeOrder, ssOps]);
 
   return prepareSelectFields;
 };
 
 export const useOpponentConfigFields = () => {
-  const { startType, tradeKey } = useStoreMap({
+  const { startType, tradeOrder } = useStoreMap({
     store: $msSettings,
     keys: [],
     fn: state => {
-      const { tradeKey } = extractCombinedKey(state.courtStepsHistory.at(-1));
+      const { tradeOrder } = extractCombinedKey(state.courtStepsHistory.at(-1));
 
       return {
         startType: state.settings.type,
-        tradeKey,
+        tradeOrder,
       };
     },
   });
@@ -206,84 +188,84 @@ export const useOpponentConfigFields = () => {
     | null
   >(() => {
     switch (startType) {
-      case StartType.Serve:
-        switch (tradeKey) {
-          case 'trades-1':
-            return {
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-              strike_type: {
-                ops: strikeTypeOps,
-                dv: TennisMatchStrikeType.Drive,
-              },
-            };
-
-          default:
-            return null;
+      case StartType.Serve: {
+        if (tradeOrder % 2 !== 0) {
+          return {
+            shot_type: {
+              ops: shotTypeOps,
+              dv: TennisMatchShotType.Forehand,
+            },
+            strike_type: {
+              ops: strikeTypeOps,
+              dv: TennisMatchStrikeType.Topspin,
+            },
+            situation_type: {
+              ops: situationTypeOps,
+              dv: TennisMatchSituationType.Offensive,
+            },
+          };
         }
-      case StartType.Return:
-        switch (tradeKey) {
-          case 'trades-1':
-            return {
-              serve_number: {
-                ops: serveOps,
-                dv: 1,
-              },
-              serve_speed: {
-                ops: ssOps,
-                dv: ssOps[0].value,
-              },
-              serve_rotation: {
-                ops: serveRotationOps,
-                dv: TennisMatchServeRotation.Flat,
-              },
-            };
-
-          case 'trades-2':
-            return {
-              strike_approach: {
-                ops: strikeAppOps,
-                dv: TennisMatchStrikeApproach.AfterBounce,
-              },
-              strike_type: {
-                ops: strikeTypeOps,
-                dv: TennisMatchStrikeType.Drive,
-              },
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-            };
-
-          default:
-            return null;
+        return null;
+      }
+      case StartType.Return: {
+        if (tradeOrder === 1) {
+          return {
+            serve_number: {
+              ops: serveOps,
+              dv: 1,
+            },
+            serve_speed: {
+              ops: ssOps,
+              dv: ssOps[0].value,
+            },
+            serve_rotation: {
+              ops: serveRotationOps,
+              dv: TennisMatchServeRotation.Flat,
+            },
+          };
         }
 
-      case StartType.Rally:
-        switch (tradeKey) {
-          case 'trades-1':
-            return {
-              strike_approach: {
-                ops: strikeAppOps,
-                dv: TennisMatchStrikeApproach.AfterBounce,
-              },
-              strike_type: {
-                ops: strikeTypeOps,
-                dv: TennisMatchStrikeType.Drive,
-              },
-              shot_type: {
-                ops: shotTypeOps,
-                dv: TennisMatchShotType.Forehand,
-              },
-            };
-
-          default:
-            return null;
+        if (tradeOrder % 2 === 0) {
+          return {
+            strike_approach: {
+              ops: strikeAppOps,
+              dv: TennisMatchStrikeApproach.AfterBounce,
+            },
+            strike_type: {
+              ops: strikeTypeOps,
+              dv: TennisMatchStrikeType.Topspin,
+            },
+            shot_type: {
+              ops: shotTypeOps,
+              dv: TennisMatchShotType.Forehand,
+            },
+          };
         }
+
+        return null;
+      }
+
+      case StartType.Rally: {
+        if (tradeOrder % 2 !== 0) {
+          return {
+            strike_approach: {
+              ops: strikeAppOps,
+              dv: TennisMatchStrikeApproach.AfterBounce,
+            },
+            strike_type: {
+              ops: strikeTypeOps,
+              dv: TennisMatchStrikeType.Topspin,
+            },
+            shot_type: {
+              ops: shotTypeOps,
+              dv: TennisMatchShotType.Forehand,
+            },
+          };
+        }
+        return null;
+      }
     }
-  }, [startType, tradeKey, ssOps]);
+  }, [startType, tradeOrder, ssOps]);
 
   return prepareSelectFields;
 };

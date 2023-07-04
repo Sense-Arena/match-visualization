@@ -5,6 +5,7 @@ import {
   StartType,
   TennisMatchServeRotation,
   TennisMatchShotType,
+  TennisMatchSituationType,
   TennisMatchStrikeApproach,
   TennisMatchStrikeType,
   TennisMatchStrikeZone,
@@ -41,6 +42,7 @@ export type CalcUnityValuesPayload = {
 export type OpponentCfgPayload = {
   shot_type?: TennisMatchShotType;
   strike_type?: TennisMatchStrikeType;
+  situation_type?: TennisMatchSituationType;
   serve_speed?: `${number}__${number}`;
   serve_number?: 1 | 2;
   serve_rotation?: TennisMatchServeRotation;

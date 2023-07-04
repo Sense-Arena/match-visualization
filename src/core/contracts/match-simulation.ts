@@ -53,8 +53,14 @@ export enum TennisMatchShotType {
   Backhand = 'backhand',
 }
 export enum TennisMatchStrikeType {
-  Drive = 'drive',
+  Topspin = 'topspin',
   Slice = 'slice',
+  Flat = 'flat',
+}
+export enum TennisMatchSituationType {
+  Offensive = 'offensive',
+  Neutral = 'neutral',
+  Defensive = 'defensive',
 }
 export enum TennisMatchServeRotation {
   Flat = 'flat',
@@ -107,6 +113,7 @@ export type UnityTrade = {
     position: [x: number, y: 0, z: number];
     shot_type?: TennisMatchShotType;
     strike_type?: TennisMatchStrikeType;
+    situation_type?: TennisMatchSituationType;
     serve_speed?: [min: number, max: number];
     serve_number?: 1 | 2;
     serve_rotation?: TennisMatchServeRotation;

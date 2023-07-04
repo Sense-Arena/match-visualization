@@ -3,6 +3,7 @@ import { attach, combine, forward } from 'effector';
 import { msD } from './api/domain.ms';
 import { extractCombinedKey } from './calculations/operations';
 import { calcDefaultItemsPositions, convertUnityTradeToState } from './calculations/worker';
+import { maxTennisTrades } from './constants';
 import { $msSettings, addDefaultTrade, setDragItemCoordinates } from './store.ms';
 import { CalcDefaultValuesPayload } from './types';
 
@@ -27,24 +28,12 @@ export const defaultTrade: TennisTrade = {
   },
 };
 
-export const $msUI = msD.createStore<{ trade: TennisTrade; tradeOrder: number }[]>([
-  {
+export const $msUI = msD.createStore<{ trade: TennisTrade; tradeOrder: number }[]>(
+  new Array(maxTennisTrades).fill(null).map((_, index) => ({
     trade: defaultTrade,
-    tradeOrder: 1,
-  },
-  {
-    trade: defaultTrade,
-    tradeOrder: 2,
-  },
-  {
-    trade: defaultTrade,
-    tradeOrder: 3,
-  },
-  {
-    trade: defaultTrade,
-    tradeOrder: 4,
-  },
-]);
+    tradeOrder: index + 1,
+  })),
+);
 
 const calcUnityValuesAttach = msD.createEffect(async (payload: TennisTradePayload) => {
   const trade = convertUnityTradeToState(payload);

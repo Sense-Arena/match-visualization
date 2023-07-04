@@ -159,6 +159,17 @@ const mb1 = style({
   marginBottom: '1rem',
 });
 
+const hint = style({
+  position: 'absolute',
+  top: '50%',
+  right: '5%',
+  transform: `translate(-5%, -50%) !important`,
+});
+
+const btnsGroup = style({
+  margin: 'auto',
+});
+
 export const stStyles = {
   tennisCourt,
   courtWrap,
@@ -171,4 +182,6 @@ export const stStyles = {
   loading,
   oldItem,
   mb1,
+  btnsGroup,
+  hint,
 };
