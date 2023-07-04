@@ -1,4 +1,4 @@
-import { IconButton, InfoIcon } from '@sensearena/ui';
+import { IconButton, InfoIcon, themeVars } from '@sensearena/ui';
 import { useStoreMap } from 'effector-react';
 import { useState } from 'react';
 import { FormTooltip } from 'src/tootlip/FormTooltip';
@@ -22,7 +22,7 @@ export const HintBtn = () => {
     <div className={stStyles.hint}>
       <FormTooltip title={stepHint} arrow open={open} placement="top">
         <IconButton onClick={() => setOpen(v => !v)} size="s" color="secondary">
-          <InfoIcon />
+          <InfoIcon color={themeVars.colors.white} />
         </IconButton>
       </FormTooltip>
     </div>
