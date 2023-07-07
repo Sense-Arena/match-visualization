@@ -81,7 +81,7 @@ export const DraggablePlayer = memo<Props>(({ x, y, width, height }) => {
 
               <div
                 className={stStyles.oldItem}
-                style={{ top: pTrade.trade.coords.player.y - 10, left: pTrade.trade.coords.player.x + 15, opacity: 1 }}
+                style={{ top: pTrade.trade.coords.player.y - 10, left: pTrade.trade.coords.player.x + 15 }}
               >
                 {pTrade.tradeOrder}
               </div>

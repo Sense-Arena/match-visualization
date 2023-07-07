@@ -81,7 +81,7 @@ export const DraggableAI = memo<Props>(({ x, y, width, height }) => {
 
               <div
                 className={stStyles.oldItem}
-                style={{ top: pTrade.trade.coords.opponent.y - 10, left: pTrade.trade.coords.opponent.x + 15, opacity: 1 }}
+                style={{ top: pTrade.trade.coords.opponent.y - 10, left: pTrade.trade.coords.opponent.x + 15 }}
               >
                 {pTrade.tradeOrder}
               </div>

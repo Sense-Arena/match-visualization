@@ -34,7 +34,7 @@ const ddItem = style({
 const oldItem = style({
   position: 'absolute',
   zIndex: 1,
-  opacity: 0.5,
+  opacity: 0.35,
   pointerEvents: 'none',
 });
 
@@ -162,7 +162,7 @@ const mb1 = style({
 const hint = style({
   position: 'absolute',
   top: '50%',
-  right: '5%',
+  left: '5%',
   transform: `translate(-5%, -50%) !important`,
 });
 

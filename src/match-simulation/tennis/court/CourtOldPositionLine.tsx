@@ -22,8 +22,8 @@ export const CourtOldPositionLine = memo<Props>(({ height, prevX, prevY, width, 
   const [sx, sy, cx, cy, ex, ey, ae] = arrow;
   const endAngleAsDegrees = ae * (180 / Math.PI);
   return (
-    <svg width={width} height={height} style={{ position: 'absolute', top: 0, left: 0 }}>
-      <circle cx={sx} cy={sy} r={4} />
+    <svg width={width} height={height} style={{ position: 'absolute', top: 0, left: 0, opacity: 0.65 }}>
+      <circle cx={sx} cy={sy} r={4} opacity={0.65} />
       <path
         d={`M${sx},${sy} Q${cx},${cy} ${ex},${ey}`}
         stroke={themeVars.colors.text}
@@ -33,7 +33,7 @@ export const CourtOldPositionLine = memo<Props>(({ height, prevX, prevY, width, 
         shapeRendering="geometricPrecision"
         fill="none"
       />
-      <polygon points="0,-6 12,0, 0,6" transform={`translate(${ex},${ey}) rotate(${endAngleAsDegrees})`} />
+      <polygon points="0,-6 12,0, 0,6" transform={`translate(${ex},${ey}) rotate(${endAngleAsDegrees})`} opacity={0.65} />
     </svg>
   );
 });
