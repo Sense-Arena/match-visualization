@@ -16,9 +16,10 @@ type Props = {
   y: number;
   height: number;
   width: number;
+  basePath?: string;
 };
 
-export const DraggableAI = memo<Props>(({ x, y, width, height }) => {
+export const DraggableAI = memo<Props>(({ x, y, width, height, basePath }) => {
   const { dargEnabled, animated, openConfig, tradeOrder } = useStoreMap({
     store: $msSettings,
     keys: [],
@@ -49,7 +50,7 @@ export const DraggableAI = memo<Props>(({ x, y, width, height }) => {
     <>
       <FormTooltip title={<OpponentConfigForm />} arrow open={openConfig}>
         <img
-          src="/imgs/tennis-courts/AI.svg"
+          src={`${basePath}imgs/tennis-courts/AI.svg`}
           alt="tennis AI"
           width="50px"
           height="54px"
@@ -71,7 +72,7 @@ export const DraggableAI = memo<Props>(({ x, y, width, height }) => {
           {pTrade.trade.coords.opponent.y === y && pTrade.trade.coords.opponent.x === x ? null : (
             <>
               <img
-                src="/imgs/tennis-courts/AI.svg"
+                src={`${basePath}imgs/tennis-courts/AI.svg`}
                 alt="tennis AI old"
                 width="50px"
                 height="54px"

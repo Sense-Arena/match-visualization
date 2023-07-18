@@ -10,9 +10,10 @@ import { stStyles } from './st.css';
 type Props = {
   x: number;
   y: number;
+  basePath?: string;
 };
 
-export const DraggableBall = memo<Props>(({ x, y }) => {
+export const DraggableBall = memo<Props>(({ x, y, basePath }) => {
   const { animated, dargEnabled, banned } = useStoreMap({
     store: $msSettings,
     keys: [],
@@ -40,7 +41,7 @@ export const DraggableBall = memo<Props>(({ x, y }) => {
 
   return (
     <img
-      src="/imgs/tennis-courts/ball.svg"
+      src={`${basePath}imgs/tennis-courts/ball.svg`}
       alt="tennis ball"
       width="27px"
       height="27px"

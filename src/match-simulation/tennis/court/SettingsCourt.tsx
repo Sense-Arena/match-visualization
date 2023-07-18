@@ -4,9 +4,11 @@ import { SettingsCourtBtns, SettingsCourtBtnsProps } from './SettingsCourtBtns';
 import { oppSideId } from './constants';
 import { stStyles } from './st.css';
 
-type Props = SettingsCourtBtnsProps;
+type Props = SettingsCourtBtnsProps & {
+  basePath?: string;
+};
 
-export const SettingsCourt = ({ createMS, editMS, goBack, loading, id }: Props) => {
+export const SettingsCourt = ({ createMS, editMS, goBack, loading, id, basePath = '/' }: Props) => {
   return (
     <div>
       <Divider className={stStyles.sideTextWrap.top}>
@@ -15,7 +17,7 @@ export const SettingsCourt = ({ createMS, editMS, goBack, loading, id }: Props) 
         </Paragraph>
       </Divider>
       <div className={stStyles.courtWrap}>
-        <ActionableCourt />
+        <ActionableCourt basePath={basePath} />
       </div>
       <Divider className={stStyles.sideTextWrap.bottom}>
         <Paragraph variant="caption">My side</Paragraph>

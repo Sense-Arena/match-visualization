@@ -18,7 +18,9 @@ import { HintBtn } from './HintBtn';
 import { stStyles } from './st.css';
 import { useTradesDefault } from './useTradesDefault';
 
-export const ActionableCourt = memo(() => {
+export const ActionableCourt = memo<{
+  basePath?: string;
+}>(({ basePath }) => {
   const courtRef = useRef<HTMLImageElement>(null);
   const { surface, tradeOrder, isCannonBall, isFirstServe, isFirstReturn } = useStoreMap({
     store: $msSettings,
@@ -186,7 +188,7 @@ export const ActionableCourt = memo(() => {
       onDragMove={onDragMove}
     >
       <img
-        src={`/imgs/tennis-courts/t_court_${surface}.jpg`}
+        src={`${basePath}imgs/tennis-courts/t_court_${surface}.jpg`}
         alt="tennis court surface"
         className={stStyles.tennisCourt}
         ref={courtRef}
@@ -203,20 +205,22 @@ export const ActionableCourt = memo(() => {
         trade={info.trade}
       />
 
-      <DraggableBall x={info.trade.coords.ball.x} y={info.trade.coords.ball.y} />
+      <DraggableBall x={info.trade.coords.ball.x} y={info.trade.coords.ball.y} basePath={basePath} />
       <DraggableAI
         x={info.trade.coords.opponent.x}
         y={info.trade.coords.opponent.y}
         width={courtRef.current?.offsetWidth ?? 0}
         height={courtRef.current?.offsetHeight ?? 0}
+        basePath={basePath}
       />
       <DraggablePlayer
         x={info.trade.coords.player.x}
         y={info.trade.coords.player.y}
         width={courtRef.current?.offsetWidth ?? 0}
         height={courtRef.current?.offsetHeight ?? 0}
+        basePath={basePath}
       />
-      <DraggableCannon x={info.trade.coords.cannon.x} y={info.trade.coords.cannon.y} />
+      <DraggableCannon x={info.trade.coords.cannon.x} y={info.trade.coords.cannon.y} basePath={basePath} />
 
       <CourtLoading />
       <HintBtn />

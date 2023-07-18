@@ -10,9 +10,10 @@ import { stStyles } from './st.css';
 type Props = {
   x: number;
   y: number;
+  basePath?: string;
 };
 
-export const DraggableCannon = memo<Props>(({ x, y }) => {
+export const DraggableCannon = memo<Props>(({ x, y, basePath }) => {
   const { dargEnabled, animated, isCannon } = useStoreMap({
     store: $msSettings,
     keys: [],
@@ -41,7 +42,7 @@ export const DraggableCannon = memo<Props>(({ x, y }) => {
   if (!isCannon) return null;
   return (
     <img
-      src={`/imgs/tennis-courts/cannon.svg`}
+      src={`${basePath}imgs/tennis-courts/cannon.svg`}
       alt="tennis player"
       width="50px"
       height="54px"
