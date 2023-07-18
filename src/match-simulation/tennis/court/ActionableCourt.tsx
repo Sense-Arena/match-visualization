@@ -3,7 +3,7 @@ import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dn
 import { DragEndEvent, DragMoveEvent } from '@dnd-kit/core/dist/types';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { useStoreMap } from 'effector-react';
-import { memo, useCallback, useRef } from 'react';
+import { RefObject, memo, useCallback, useRef } from 'react';
 import { $msUI } from '../calc.ms';
 import { calcUnityValues, extractCombinedKey } from '../calculations/operations';
 import { ballZone } from '../constants';
@@ -18,9 +18,12 @@ import { HintBtn } from './HintBtn';
 import { stStyles } from './st.css';
 import { useTradesDefault } from './useTradesDefault';
 
-export const ActionableCourt = memo<{
+type Props = {
   basePath?: string;
-}>(({ basePath }) => {
+  courtAreaRef: RefObject<HTMLDivElement>;
+};
+
+export const ActionableCourt = memo<Props>(({ basePath, courtAreaRef }) => {
   const courtRef = useRef<HTMLImageElement>(null);
   const { surface, tradeOrder, isCannonBall, isFirstServe, isFirstReturn } = useStoreMap({
     store: $msSettings,
@@ -212,6 +215,7 @@ export const ActionableCourt = memo<{
         width={courtRef.current?.offsetWidth ?? 0}
         height={courtRef.current?.offsetHeight ?? 0}
         basePath={basePath}
+        courtAreaRef={courtAreaRef}
       />
       <DraggablePlayer
         x={info.trade.coords.player.x}
@@ -219,11 +223,12 @@ export const ActionableCourt = memo<{
         width={courtRef.current?.offsetWidth ?? 0}
         height={courtRef.current?.offsetHeight ?? 0}
         basePath={basePath}
+        courtAreaRef={courtAreaRef}
       />
       <DraggableCannon x={info.trade.coords.cannon.x} y={info.trade.coords.cannon.y} basePath={basePath} />
 
       <CourtLoading />
-      <HintBtn />
+      <HintBtn courtAreaRef={courtAreaRef} />
     </DndContext>
   );
 });

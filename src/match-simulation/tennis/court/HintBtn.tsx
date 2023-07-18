@@ -1,12 +1,12 @@
 import { IconButton, InfoIcon, themeVars } from '@sensearena/ui';
 import { useStoreMap } from 'effector-react';
-import { useState } from 'react';
+import { RefObject, memo, useState } from 'react';
 import { FormTooltip } from 'src/tootlip/FormTooltip';
 import { stepHints } from '../constants';
 import { $msSettings } from '../store.ms';
 import { stStyles } from './st.css';
 
-export const HintBtn = () => {
+export const HintBtn = memo<{ courtAreaRef: RefObject<HTMLDivElement> }>(({ courtAreaRef }) => {
   const [open, setOpen] = useState(false);
 
   const stepHint = useStoreMap({
@@ -20,11 +20,28 @@ export const HintBtn = () => {
 
   return (
     <div className={stStyles.hint}>
-      <FormTooltip title={stepHint} arrow open={open} placement="top">
+      <FormTooltip
+        title={stepHint}
+        arrow
+        open={open}
+        placement="top"
+        PopperProps={{
+          popperOptions: {
+            modifiers: [
+              {
+                name: 'preventOverflow',
+                options: {
+                  boundary: courtAreaRef.current,
+                },
+              },
+            ],
+          },
+        }}
+      >
         <IconButton onClick={() => setOpen(v => !v)} size="s" color="secondary">
           <InfoIcon color={themeVars.colors.white} />
         </IconButton>
       </FormTooltip>
     </div>
   );
-};
+});

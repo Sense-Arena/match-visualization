@@ -2,7 +2,7 @@ import { CourtItem } from '@core/contracts';
 import { useDraggable } from '@dnd-kit/core';
 import { clsx } from '@sensearena/ui';
 import { useStore, useStoreMap } from 'effector-react';
-import { Fragment, memo } from 'react';
+import { Fragment, RefObject, memo } from 'react';
 import { FormTooltip } from 'src/tootlip/FormTooltip';
 import { extractCombinedKey } from '../calculations/operations';
 import { $prevTrades } from '../selectors.ms';
@@ -17,9 +17,10 @@ type Props = {
   height: number;
   width: number;
   basePath?: string;
+  courtAreaRef: RefObject<HTMLDivElement>;
 };
 
-export const DraggableAI = memo<Props>(({ x, y, width, height, basePath }) => {
+export const DraggableAI = memo<Props>(({ x, y, width, height, basePath, courtAreaRef }) => {
   const { dargEnabled, animated, openConfig, tradeOrder } = useStoreMap({
     store: $msSettings,
     keys: [],
@@ -48,7 +49,23 @@ export const DraggableAI = memo<Props>(({ x, y, width, height, basePath }) => {
 
   return (
     <>
-      <FormTooltip title={<OpponentConfigForm />} arrow open={openConfig}>
+      <FormTooltip
+        title={<OpponentConfigForm />}
+        arrow
+        open={openConfig}
+        PopperProps={{
+          popperOptions: {
+            modifiers: [
+              {
+                name: 'preventOverflow',
+                options: {
+                  boundary: courtAreaRef.current,
+                },
+              },
+            ],
+          },
+        }}
+      >
         <img
           src={`${basePath}imgs/tennis-courts/AI.svg`}
           alt="tennis AI"

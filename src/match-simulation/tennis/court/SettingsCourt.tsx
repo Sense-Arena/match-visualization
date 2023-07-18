@@ -1,4 +1,5 @@
 import { Divider, Paragraph } from '@sensearena/ui';
+import { useRef } from 'react';
 import { ActionableCourt } from './ActionableCourt';
 import { SettingsCourtBtns, SettingsCourtBtnsProps } from './SettingsCourtBtns';
 import { oppSideId } from './constants';
@@ -9,6 +10,7 @@ type Props = SettingsCourtBtnsProps & {
 };
 
 export const SettingsCourt = ({ createMS, editMS, goBack, loading, id, basePath = '/' }: Props) => {
+  const courtAreaRef = useRef<HTMLDivElement>(null);
   return (
     <div>
       <Divider className={stStyles.sideTextWrap.top}>
@@ -16,8 +18,8 @@ export const SettingsCourt = ({ createMS, editMS, goBack, loading, id, basePath 
           Opponent side
         </Paragraph>
       </Divider>
-      <div className={stStyles.courtWrap}>
-        <ActionableCourt basePath={basePath} />
+      <div className={stStyles.courtWrap} ref={courtAreaRef}>
+        <ActionableCourt basePath={basePath} courtAreaRef={courtAreaRef} />
       </div>
       <Divider className={stStyles.sideTextWrap.bottom}>
         <Paragraph variant="caption">My side</Paragraph>
