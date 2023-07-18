@@ -243,6 +243,10 @@ export const useOpponentConfigFields = () => {
               ops: shotTypeOps,
               dv: TennisMatchShotType.Forehand,
             },
+            situation_type: {
+              ops: situationTypeOps,
+              dv: TennisMatchSituationType.Offensive,
+            },
           };
         }
 
@@ -263,6 +267,10 @@ export const useOpponentConfigFields = () => {
             shot_type: {
               ops: shotTypeOps,
               dv: TennisMatchShotType.Forehand,
+            },
+            situation_type: {
+              ops: situationTypeOps,
+              dv: TennisMatchSituationType.Offensive,
             },
           };
         }
