@@ -45,13 +45,18 @@ export const ballZone = {
     minY: 1,
   },
   serve: {
-    maxY: 6.3,
-    minY: 4.5,
+    maxY: 7,
+    minY: 4,
   },
   retrn: {
-    maxY: -4.5,
-    minY: -6.3,
+    maxY: -4,
+    minY: -7,
   },
+};
+
+export const TShirtZone = {
+  opponentY: 12,
+  playerY: -12,
 };
 
 export const defaultMSDraft: MSSettingsState = {

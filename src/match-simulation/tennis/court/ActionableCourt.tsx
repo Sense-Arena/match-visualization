@@ -6,7 +6,7 @@ import { useStoreMap } from 'effector-react';
 import { RefObject, memo, useCallback, useRef } from 'react';
 import { $msUI } from '../calc.ms';
 import { calcUnityValues, extractCombinedKey } from '../calculations/operations';
-import { ballZone } from '../constants';
+import { TShirtZone, ballZone } from '../constants';
 import { $msSettings, recalcPositions, setAnimation, setBan, setDragItemCoordinates, setImgSize } from '../store.ms';
 import { CourtLines } from './CourtLines';
 import { CourtLoading } from './CourtLoading';
@@ -25,7 +25,7 @@ type Props = {
 
 export const ActionableCourt = memo<Props>(({ basePath, courtAreaRef }) => {
   const courtRef = useRef<HTMLImageElement>(null);
-  const { surface, tradeOrder, isCannonBall, isFirstServe, isFirstReturn } = useStoreMap({
+  const { surface, tradeOrder, isCannonBall, isFirstServe, isFirstReturn, isFirstOpReturn, isFirstPlServe } = useStoreMap({
     store: $msSettings,
     keys: [],
     fn: state => {
@@ -36,7 +36,9 @@ export const ActionableCourt = memo<Props>(({ basePath, courtAreaRef }) => {
         tradeOrder,
         isCannonBall: courtStep === 'ball_move' && state.settings.type === StartType.Rally && tradeOrder === 1,
         isFirstServe: courtStep === 'ball_move' && tradeOrder === 1 && state.settings.type === StartType.Serve,
+        isFirstPlServe: courtStep === 'player_move' && tradeOrder === 1 && state.settings.type === StartType.Serve,
         isFirstReturn: courtStep === 'ball_move' && tradeOrder === 1 && state.settings.type === StartType.Return,
+        isFirstOpReturn: courtStep === 'opponent_move' && tradeOrder === 1 && state.settings.type === StartType.Return,
       };
     },
   });
@@ -58,8 +60,22 @@ export const ActionableCourt = memo<Props>(({ basePath, courtAreaRef }) => {
     (item: CourtItem, deltaY: number) => {
       const court = courtRef.current!;
       const calcY = info.trade.coords[item].y + deltaY;
+      const newCoords = calcUnityValues({
+        item,
+        height: court.offsetHeight,
+        width: court.offsetWidth,
+        x: 0,
+        y: calcY,
+      });
       switch (item) {
-        case CourtItem.Player:
+        case CourtItem.Player: {
+          const maxPlayerY = court.offsetHeight / 2 - 20;
+          if (isFirstPlServe) {
+            return newCoords.y <= TShirtZone.playerY ? calcY : info.trade.coords[item].y;
+          }
+
+          return calcY < maxPlayerY ? maxPlayerY : calcY;
+        }
         case CourtItem.Cannon: {
           const maxPlayerY = court.offsetHeight / 2 - 20;
 
@@ -68,17 +84,14 @@ export const ActionableCourt = memo<Props>(({ basePath, courtAreaRef }) => {
         case CourtItem.AI: {
           const maxAIY = court.offsetHeight / 2 - 54;
 
+          if (isFirstOpReturn) {
+            return newCoords.y >= TShirtZone.opponentY ? calcY : info.trade.coords[item].y;
+          }
+
           return calcY > maxAIY ? maxAIY : calcY;
         }
 
         case CourtItem.Ball: {
-          const newCoords = calcUnityValues({
-            item,
-            height: court.offsetHeight,
-            width: court.offsetWidth,
-            x: 0,
-            y: calcY,
-          });
           const maxBallCoord =
             newCoords.y > (isFirstReturn ? ballZone.retrn.maxY : isFirstServe ? ballZone.serve.maxY : ballZone.maxY) ||
             newCoords.y <
@@ -98,7 +111,7 @@ export const ActionableCourt = memo<Props>(({ basePath, courtAreaRef }) => {
           return calcY;
       }
     },
-    [info, courtRef, isCannonBall, isFirstServe, isFirstReturn],
+    [info, courtRef, isCannonBall, isFirstServe, isFirstReturn, isFirstOpReturn, isFirstPlServe],
   );
   const defineX = useCallback(
     (item: CourtItem, deltaX: number) => {
