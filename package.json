@@ -1,6 +1,6 @@
 {
   "name": "@sensearena/mv",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "type": "module",
   "files": [
     "dist"
@@ -34,7 +34,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.18",
     "@react-spring/web": "9.7.3",
-    "@sensearena/ui": "^0.2.59",
+    "@sensearena/ui": "^0.2.60",
     "@storybook/addon-essentials": "^7.5.3",
     "@storybook/addon-interactions": "^7.5.3",
     "@storybook/addon-links": "^7.5.3",
