@@ -1,7 +1,7 @@
 import { MSSavePayload, TennisMatchWind } from '@core/contracts';
 import { Button, ButtonGroup } from '@sensearena/ui';
 import { useStoreMap } from 'effector-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import { extractCombinedKey } from '../calculations/operations';
 import { additionalTradeData, maxTennisTrades, predefinedCourtSteps, stepHints } from '../constants';
 import { $msSettings, backCourtStep, forwardCourtStep, setMSStep } from '../store.ms';
@@ -18,17 +18,19 @@ export type SettingsCourtBtnsProps = {
 };
 
 export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading, id, createMS, editMS }) => {
-  const { settings, prevStepsLength, trades, canSave, tradeOrder, isLastTradeStep } = useStoreMap({
+  const mutatedCourtSteps = useRef({ ...predefinedCourtSteps });
+  const { settings, prevStepsLength, trades, canSave, tradeOrder, isLastTradeStep, shouldAddNewTrade } = useStoreMap({
     store: $msSettings,
-    keys: [],
-    fn: state => {
+    keys: [mutatedCourtSteps.current],
+    fn: (state, [mCS]) => {
       const { tradeOrder, courtStep } = extractCombinedKey(state.courtStepsHistory.at(-1));
 
       return {
         settings: state.settings,
         prevStepsLength: state.courtStepsHistory.length,
         trades: state.unityTradesA,
-        canSave: predefinedCourtSteps[state.settings.type].length === state.courtStepsHistory.length,
+        shouldAddNewTrade: mCS[state.settings.type].length === state.courtStepsHistory.length,
+        canSave: predefinedCourtSteps[state.settings.type].length <= state.courtStepsHistory.length,
         tradeOrder,
         isLastTradeStep: tradeOrder === maxTennisTrades + 1 && courtStep === 'ball_move',
       };
@@ -46,7 +48,7 @@ export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading
   }, [prevStepsLength]);
 
   const onForward = useCallback(async () => {
-    if (canSave) {
+    if (shouldAddNewTrade) {
       const newDataToAdd = additionalTradeData.steps.map((v, index) => {
         const ck = extractCombinedKey(v);
         const step = `${ck.courtStep}__trades-${ck.tradeOrder + tradeOrder}` as CombinedTradeKey;
@@ -55,7 +57,9 @@ export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading
           info: additionalTradeData.infos[index],
         };
       });
-      predefinedCourtSteps[settings.type] = predefinedCourtSteps[settings.type].concat(newDataToAdd.map(v => v.step));
+      mutatedCourtSteps.current[settings.type] = mutatedCourtSteps.current[settings.type].concat(
+        newDataToAdd.map(v => v.step),
+      );
       stepHints[settings.type] = {
         ...stepHints[settings.type],
         ...newDataToAdd.reduce((acc, next) => {
@@ -64,9 +68,9 @@ export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading
         }, {} as Record<CombinedTradeKey, string>),
       };
     }
-    forwardCourtStep(predefinedCourtSteps[settings.type].slice(prevStepsLength)[0]);
+    forwardCourtStep(mutatedCourtSteps.current[settings.type].slice(prevStepsLength)[0]);
     document.getElementById(oppSideId)?.scrollIntoView({ behavior: 'smooth' });
-  }, [canSave, settings.type, prevStepsLength, tradeOrder]);
+  }, [shouldAddNewTrade, settings.type, prevStepsLength, tradeOrder, mutatedCourtSteps]);
 
   const onSave = useCallback(async () => {
     if (id) {
