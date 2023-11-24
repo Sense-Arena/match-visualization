@@ -20,12 +20,8 @@ export default defineConfig(({ mode }) => ({
       jsxRuntime: 'classic',
     }),
     dts({
-      outputDir: path.resolve(__dirname, 'dist/types'),
+      rollupTypes: true,
       exclude: ['**/stories/**'],
-      entryRoot: path.resolve(__dirname, 'src/index.ts'),
-      afterDiagnostic: console.debug,
-      skipDiagnostics: false,
-      copyDtsFiles: true,
     }),
     mode === 'test' &&
       visualizer({
