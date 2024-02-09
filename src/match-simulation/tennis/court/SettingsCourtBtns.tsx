@@ -1,10 +1,10 @@
 import { MSSavePayload, TennisMatchWind } from '@core/contracts';
-import { Button, ButtonGroup } from '@sensearena/ui';
+import { Button, ButtonGroup, DeleteIcon, IconButton, Modal, Paragraph } from '@sensearena/ui';
 import { useStoreMap } from 'effector-react';
-import { memo, useCallback, useRef } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import { extractCombinedKey } from '../calculations/operations';
 import { additionalTradeData, maxTennisTrades, predefinedCourtSteps, stepHints } from '../constants';
-import { $msSettings, backCourtStep, forwardCourtStep, setMSStep } from '../store.ms';
+import { $msSettings, backCourtStep, eraseSubseqTrades, forwardCourtStep, setMSStep } from '../store.ms';
 import { CombinedTradeKey } from '../types';
 import { oppSideId } from './constants';
 import { stStyles } from './st.css';
@@ -18,24 +18,27 @@ export type SettingsCourtBtnsProps = {
 };
 
 export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading, id, createMS, editMS }) => {
+  const [opened, setModalOpen] = useState(false);
   const mutatedCourtSteps = useRef({ ...predefinedCourtSteps });
-  const { settings, prevStepsLength, trades, canSave, tradeOrder, isLastTradeStep, shouldAddNewTrade } = useStoreMap({
-    store: $msSettings,
-    keys: [mutatedCourtSteps.current],
-    fn: (state, [mCS]) => {
-      const { tradeOrder, courtStep } = extractCombinedKey(state.courtStepsHistory.at(-1));
+  const { settings, prevStepsLength, trades, canSave, tradeOrder, isLastTradeStep, shouldAddNewTrade, canErase } =
+    useStoreMap({
+      store: $msSettings,
+      keys: [mutatedCourtSteps.current],
+      fn: (state, [mCS]) => {
+        const { tradeOrder, courtStep } = extractCombinedKey(state.courtStepsHistory.at(-1));
 
-      return {
-        settings: state.settings,
-        prevStepsLength: state.courtStepsHistory.length,
-        trades: state.unityTradesA,
-        shouldAddNewTrade: mCS[state.settings.type].length === state.courtStepsHistory.length,
-        canSave: predefinedCourtSteps[state.settings.type].length <= state.courtStepsHistory.length,
-        tradeOrder,
-        isLastTradeStep: tradeOrder === maxTennisTrades + 1 && courtStep === 'ball_move',
-      };
-    },
-  });
+        return {
+          settings: state.settings,
+          prevStepsLength: state.courtStepsHistory.length,
+          trades: state.unityTradesA,
+          shouldAddNewTrade: mCS[state.settings.type].length === state.courtStepsHistory.length,
+          canSave: predefinedCourtSteps[state.settings.type].length <= state.courtStepsHistory.length,
+          canErase: state.unityTradesA.length > 3,
+          tradeOrder,
+          isLastTradeStep: tradeOrder === maxTennisTrades + 1 && courtStep === 'ball_move',
+        };
+      },
+    });
 
   const onBack = useCallback(() => {
     if (prevStepsLength === 1) {
@@ -88,33 +91,61 @@ export const SettingsCourtBtns = memo<SettingsCourtBtnsProps>(({ goBack, loading
       });
     }
     goBack();
-
-    return;
   }, [settings, id, goBack, editMS, trades, createMS]);
 
+  const onErase = useCallback(() => {
+    setModalOpen(true);
+  }, []);
+  const eraseSteps = useCallback(() => {
+    setModalOpen(false);
+    eraseSubseqTrades();
+    onBack();
+  }, [onBack]);
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
+  }, []);
+
   return (
-    <ButtonGroup className={stStyles.btnsGroup}>
-      <Button size="s" mode="square" color="secondary" onClick={onBack} disabled={loading}>
-        back
-      </Button>
-      {canSave ? (
-        <Button
-          size="s"
-          mode="square"
-          color="secondary_action"
-          onClick={onSave}
-          loading={loading}
-          style={{ textTransform: 'uppercase' }}
-        >
-          save
-        </Button>
-      ) : null}
-      {isLastTradeStep ? null : (
-        <Button size="s" mode="square" onClick={onForward} loading={loading}>
-          next
-        </Button>
-      )}
-    </ButtonGroup>
+    <>
+      <div className={stStyles.btnsGroup}>
+        <ButtonGroup>
+          <Button size="s" mode="square" color="secondary" onClick={onBack} disabled={loading}>
+            back
+          </Button>
+          {isLastTradeStep ? null : (
+            <Button size="s" mode="square" onClick={onForward} loading={loading}>
+              next
+            </Button>
+          )}
+          <Button
+            size="s"
+            mode="square"
+            color="secondary_action"
+            onClick={onSave}
+            loading={loading}
+            style={{ textTransform: 'uppercase' }}
+            disabled={!canSave}
+          >
+            save
+          </Button>
+        </ButtonGroup>
+        <IconButton size="s" color="primary" onClick={onErase} style={{ textTransform: 'uppercase' }} disabled={!canErase}>
+          <DeleteIcon />
+        </IconButton>
+      </div>
+      <Modal open={opened} handleClose={closeModal} title="Erase steps" size="s">
+        <Paragraph variant="caption">Would you like to erase the current step and all subsequent steps?</Paragraph>
+
+        <ButtonGroup className={stStyles.modalActions}>
+          <Button onClick={eraseSteps} size="s" mode="square" color="primary">
+            Yes
+          </Button>
+          <Button size="s" mode="square" color="secondary" onClick={closeModal}>
+            No
+          </Button>
+        </ButtonGroup>
+      </Modal>
+    </>
   );
 });
 

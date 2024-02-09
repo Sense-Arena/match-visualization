@@ -91,7 +91,7 @@ export type MatchSimulationSettingsConfig = {
   score: string;
   age_category_id: string;
   units: 'mph' | 'kmh';
-  source: 'user' | 'b2b' | 'sense_arena';
+  source: 'user' | 'b2b' | 'sense_arena' | 'drill';
 };
 
 export type UnityTrade = {
@@ -139,7 +139,7 @@ export type CustomDrill = {
   wind_direction: TennisWindDirection;
   surface: TennisMatchSurface;
   score: string;
-  source: 'user' | 'b2b' | 'sense_arena';
+  source: 'user' | 'b2b' | 'sense_arena' | 'drill';
   age_category: {
     title: string;
     type: string[];
