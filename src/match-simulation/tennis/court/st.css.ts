@@ -167,7 +167,13 @@ const hint = style({
 });
 
 const btnsGroup = style({
-  margin: 'auto',
+  display: 'flex',
+  justifyContent: 'space-between',
+  margin: '0 1.25rem',
+});
+
+const modalActions = style({
+  margin: '1rem auto 0',
 });
 
 export const stStyles = {
@@ -184,4 +190,5 @@ export const stStyles = {
   mb1,
   btnsGroup,
   hint,
+  modalActions,
 };

@@ -13,6 +13,7 @@ export const savePlayerConfig = msD.createEvent<PlayerCfgPayload>();
 export const setImgSize = msD.createEvent<{ width: number; height: number }>();
 export const resetMSState = msD.createEvent();
 export const resetTrades = msD.createEvent();
+export const eraseSubseqTrades = msD.createEvent();
 export const setAgeCategoryInfo = msD.createEvent<{ title: string }>();
 export const forwardCourtStep = msD.createEvent<CombinedTradeKey>();
 export const backCourtStep = msD.createEvent();
@@ -211,20 +212,11 @@ $msSettings.on(resetTrades, state => {
     unityTradesA: [],
   };
 });
+$msSettings.on(eraseSubseqTrades, state => {
+  const { tradeOrder } = extractCombinedKey(state.courtStepsHistory.at(-1));
 
-// $msSettings.on(getMatchSimulationFX.doneData, (_, data) => data);
-
-// forward({
-//   from: [createMatchSimulationFX.done, editMatchSimulationFX.done],
-//   to: resetMSState,
-// });
-
-// forward({
-//   from: [deleteMatchSimulationFX.done],
-//   to: [hideModal],
-// });
-
-// addToToastFactory($uic, {
-//   apis: [createMatchSimulationFX, editMatchSimulationFX, deleteMatchSimulationFX],
-//   toastId: ToastId.MS,
-// });
+  return {
+    ...state,
+    unityTradesA: state.unityTradesA.slice(0, tradeOrder - 1),
+  };
+});
