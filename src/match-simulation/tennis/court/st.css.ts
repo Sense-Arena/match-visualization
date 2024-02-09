@@ -168,8 +168,8 @@ const hint = style({
 
 const btnsGroup = style({
   display: 'flex',
-  justifyContent: 'space-between',
-  margin: '0 1.25rem',
+  justifyContent: 'center',
+  gap: '.5rem',
 });
 
 const modalActions = style({
