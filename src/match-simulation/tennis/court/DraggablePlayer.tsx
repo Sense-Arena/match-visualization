@@ -1,7 +1,7 @@
 import { CourtItem } from '@core/contracts';
 import { useDraggable } from '@dnd-kit/core';
 import { clsx } from '@sensearena/ui';
-import { useStore, useStoreMap } from 'effector-react';
+import { useStoreMap, useUnit } from 'effector-react';
 import { Fragment, RefObject, memo } from 'react';
 import { FormTooltip } from 'src/tootlip/FormTooltip';
 import { extractCombinedKey } from '../calculations/operations';
@@ -35,7 +35,7 @@ export const DraggablePlayer = memo<Props>(({ x, y, width, height, basePath, cou
       };
     },
   });
-  const prevTrades = useStore($prevTrades);
+  const prevTrades = useUnit($prevTrades);
 
   const { listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: CourtItem.Player,

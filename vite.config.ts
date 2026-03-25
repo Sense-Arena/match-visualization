@@ -16,9 +16,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     vanillaExtractPlugin(),
-    react({
-      jsxRuntime: 'classic',
-    }),
+    react(),
     dts({
       rollupTypes: true,
       exclude: ['**/stories/**'],
@@ -29,6 +27,7 @@ export default defineConfig(({ mode }) => ({
       }),
   ],
   build: {
+    cssMinify: 'esbuild',
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'MV',
