@@ -1,6 +1,9 @@
 {
   "name": "@sensearena/mv",
-  "url": "https://github.com/Sense-Arena/match-visualization",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sense-Arena/match-visualization"
+  },
   "version": "0.1.19",
   "type": "module",
   "files": [
