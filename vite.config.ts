@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => ({
       fileName: format => `@sa-mv.${format}.js`,
     },
     rollupOptions: {
-      external: [...Object.keys(peerDependencies)],
+      external: [...Object.keys(peerDependencies), 'react/jsx-runtime', 'react/jsx-dev-runtime'],
     },
   },
 }));
