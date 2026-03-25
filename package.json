@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/Sense-Arena/match-visualization"
   },
-  "version": "0.1.19",
+  "version": "0.1.20",
   "type": "module",
   "files": [
     "dist"
@@ -18,7 +18,7 @@
       "import": "./dist/@sa-mv.es.js",
       "require": "./dist/@sa-mv.umd.js"
     },
-    "./theme.css": "./dist/style.css"
+    "./theme.css": "./dist/mv.css"
   },
   "scripts": {
     "dev": "vite",
