@@ -95,7 +95,7 @@ $msSettings.on(savePlayerConfig, (state, payload) => {
                     ...payload,
                     serve_speed: [Number(min), Number(max)] as UnityTrade['player']['serve_speed'],
                   }
-                : (payload as UnityTrade['player'])),
+                : (payload as any)),
             },
           },
         };
@@ -135,7 +135,7 @@ $msSettings.on(saveOpponentConfig, (state, payload) => {
                     ...payload,
                     serve_speed: [Number(min), Number(max)] as UnityTrade['opponent']['serve_speed'],
                   }
-                : (payload as UnityTrade['opponent'])),
+                : (payload as any)),
             },
           },
         };

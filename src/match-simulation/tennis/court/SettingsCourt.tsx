@@ -19,7 +19,7 @@ export const SettingsCourt = ({ createMS, editMS, goBack, loading, id, basePath 
         </Paragraph>
       </Divider>
       <div className={stStyles.courtWrap} ref={courtAreaRef}>
-        <ActionableCourt basePath={basePath} courtAreaRef={courtAreaRef} />
+        <ActionableCourt basePath={basePath} courtAreaRef={courtAreaRef as React.RefObject<HTMLDivElement>} />
       </div>
       <Divider className={stStyles.sideTextWrap.bottom}>
         <Paragraph variant="caption">My side</Paragraph>

@@ -1,7 +1,7 @@
 import { StartType } from '@core/contracts';
 import { Card, noop } from '@sensearena/ui';
 import type { Meta, StoryObj } from '@storybook/react';
-import { PropsWithChildren, useEffect } from 'react';
+import * as React from 'react';
 import {
   SettingsCourt,
   forwardCourtStep,
@@ -22,8 +22,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Wrap = ({ children }: PropsWithChildren) => {
-  useEffect(() => {
+const Wrap = ({ children }: React.PropsWithChildren) => {
+  React.useEffect(() => {
     saveMSSettings({
       ...settingsDefaultValues,
       type: StartType.Rally,
@@ -45,7 +45,7 @@ export const Base: Story = {
     loading: false,
     goBack: noop,
   },
-  render: args => (
+  render: (args: (typeof Base)['args']) => (
     <Wrap>
       <SettingsCourt {...args} />
     </Wrap>

@@ -1,7 +1,7 @@
 import { capitalizeFirstLetter } from '@core/utils/capitalize';
 import { objKeys } from '@core/utils/mapping';
 import { clsx, Select } from '@sensearena/ui';
-import { useStore, useStoreMap } from 'effector-react';
+import { useStoreMap, useUnit } from 'effector-react';
 import { memo, useEffect } from 'react';
 import { calcsLoading } from '../calc.ms';
 import { extractCombinedKey } from '../calculations/operations';
@@ -11,7 +11,7 @@ import { stStyles } from './st.css';
 import { useOpponentConfigFields } from './useConfigFields';
 
 export const OpponentConfigForm = memo(() => {
-  const loading = useStore(calcsLoading);
+  const loading = useUnit(calcsLoading);
 
   const { trade } = useStoreMap({
     store: $msSettings,
@@ -29,18 +29,17 @@ export const OpponentConfigForm = memo(() => {
 
   useEffect(() => {
     if (!preparedSelectFields || !trade || loading) return;
-    saveOpponentConfig(
-      objKeys(preparedSelectFields).reduce((acc, next) => {
-        const nextValue = trade.config.opponent[next] ?? preparedSelectFields[next]!.dv;
-        acc[next] =
-          next === 'serve_speed'
-            ? typeof nextValue === 'string'
-              ? nextValue
-              : `${nextValue[0]}__${nextValue[1]}`
-            : nextValue;
-        return acc;
-      }, {} as OpponentCfgPayload),
-    );
+    const config = objKeys(preparedSelectFields).reduce((acc: Record<string, any>, next) => {
+      const nextValue = trade.config.opponent[next] ?? preparedSelectFields[next]!.dv;
+      acc[next] =
+        next === 'serve_speed'
+          ? typeof nextValue === 'string'
+            ? nextValue
+            : `${nextValue[0]}__${nextValue[1]}`
+          : nextValue;
+      return acc;
+    }, {}) as OpponentCfgPayload;
+    saveOpponentConfig(config);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
@@ -63,7 +62,7 @@ export const OpponentConfigForm = memo(() => {
             selectedOptionLabel={preparedSelectFields[sfk]?.ops.find(o => o.value === renderValue)?.title ?? ''}
             options={preparedSelectFields[sfk]?.ops ?? []}
             value={renderValue}
-            onChangeSelect={value =>
+            onChangeSelect={(value: string) =>
               saveOpponentConfig({
                 [sfk]: value,
               })
