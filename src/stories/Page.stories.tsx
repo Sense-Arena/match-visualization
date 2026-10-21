@@ -1,11 +1,14 @@
 import { StartType } from '@core/contracts';
 import { Card, noop } from '@sensearena/ui';
 import type { Meta, StoryObj } from '@storybook/react';
+import { useUnit } from 'effector-react';
 import * as React from 'react';
 import {
   SettingsCourt,
+  $msSettings,
   forwardCourtStep,
   predefinedCourtSteps,
+  resetMSState,
   saveMSSettings,
   settingsDefaultValues,
 } from 'src/match-simulation/tennis';
@@ -22,21 +25,31 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Wrap = ({ children }: React.PropsWithChildren) => {
+const Wrap = ({ children, startType }: React.PropsWithChildren<{ startType: StartType }>) => {
+  const state = useUnit($msSettings);
   React.useEffect(() => {
+    resetMSState();
     saveMSSettings({
       ...settingsDefaultValues,
-      type: StartType.Rally,
+      type: startType,
     });
-    forwardCourtStep(predefinedCourtSteps['serve'][0]);
-  }, []);
+    forwardCourtStep(predefinedCourtSteps[startType][0]);
+  }, [startType]);
 
   return (
-    <Card withPadding={false} withDivider={false} className={cardStyles} title="Court">
-      {children}
-    </Card>
+    <div data-court-step={state.courtStepsHistory.at(-1)}>
+      <Card withPadding={false} withDivider={false} className={cardStyles} title="Court">
+        {children}
+      </Card>
+    </div>
   );
 };
+
+const renderCourt = (startType: StartType) => (args: React.ComponentProps<typeof SettingsCourt>) => (
+  <Wrap startType={startType}>
+    <SettingsCourt {...args} />
+  </Wrap>
+);
 
 export const Base: Story = {
   args: {
@@ -45,9 +58,8 @@ export const Base: Story = {
     loading: false,
     goBack: noop,
   },
-  render: (args: (typeof Base)['args']) => (
-    <Wrap>
-      <SettingsCourt {...args} />
-    </Wrap>
-  ),
+  render: renderCourt(StartType.Rally),
 };
+
+export const Serve: Story = { ...Base, render: renderCourt(StartType.Serve) };
+export const Return: Story = { ...Base, render: renderCourt(StartType.Return) };

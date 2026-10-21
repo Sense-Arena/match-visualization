@@ -4,29 +4,43 @@
     "type": "git",
     "url": "https://github.com/Sense-Arena/match-visualization"
   },
-  "version": "0.1.21",
+  "version": "0.2.0",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "imgs"
   ],
-  "sideEffects": false,
-  "main": "./dist/@sa-mv.umd.js",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/@sa-mv.umd.cjs",
   "module": "./dist/@sa-mv.es.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "import": "./dist/@sa-mv.es.js",
-      "require": "./dist/@sa-mv.umd.js"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/@sa-mv.es.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/@sa-mv.umd.cjs"
+      }
     },
     "./theme.css": "./dist/mv.css"
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json && vite build",
     "preview": "vite preview",
-    "build:test": "tsc && vite build -m test",
+    "build:test": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json && vite build -m test",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build --test"
+    "build-storybook": "storybook build --test",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
+    "prepack": "npm run build",
+    "test": "npm run test:package",
+    "test:package": "npm run build && node scripts/test-package.mjs",
+    "test:storybook": "node scripts/test-storybook.mjs"
   },
   "devDependencies": {
     "@dnd-kit/core": "6.3.1",
@@ -35,30 +49,31 @@
     "@dnd-kit/utilities": "3.2.2",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
-    "@mui/material": "7.3.9",
-    "@react-spring/web": "10.0.3",
-    "@sensearena/ui": "0.2.60",
-    "@storybook/addon-links": "10.3.3",
-    "@storybook/react": "10.3.3",
-    "@storybook/react-vite": "10.3.3",
-    "@types/node": "25.5.0",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "@vanilla-extract/css": "1.20.0",
+    "@mui/material": "9.5.0",
+    "@react-spring/web": "10.1.2",
+    "@sensearena/ui": "0.3.1",
+    "@storybook/addon-links": "10.6.3",
+    "@storybook/react": "10.6.3",
+    "@storybook/react-vite": "10.6.3",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vanilla-extract/css": "1.21.3",
     "@vanilla-extract/recipes": "0.5.7",
-    "@vanilla-extract/vite-plugin": "5.2.1",
-    "@vitejs/plugin-react": "6.0.1",
+    "@vanilla-extract/vite-plugin": "5.2.6",
+    "@vitejs/plugin-react": "6.1.2",
     "effector": "23.4.4",
     "effector-react": "23.3.0",
     "perfect-arrows": "0.3.7",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "rollup-plugin-visualizer": "7.0.1",
-    "storybook": "10.3.3",
+    "playwright": "1.64.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "rollup-plugin-visualizer": "7.1.1",
+    "storybook": "10.6.3",
     "tslib": "2.8.1",
-    "typescript": "5.9.3",
-    "vite": "8.0.2",
-    "vite-plugin-dts": "4.5.4"
+    "typescript": "6.0.3",
+    "unplugin-dts": "1.1.2",
+    "vite": "8.3.4"
   },
   "peerDependencies": {
     "@dnd-kit/core": "^6.x",
@@ -67,9 +82,9 @@
     "@dnd-kit/utilities": "3.x",
     "@emotion/react": "11.x",
     "@emotion/styled": "11.x",
-    "@mui/material": "7.x",
+    "@mui/material": "7.x || ^9.5.0",
     "@react-spring/web": "10.x",
-    "@sensearena/ui": "0.2.x",
+    "@sensearena/ui": "^0.3.1",
     "@vanilla-extract/css": "1.x",
     "@vanilla-extract/recipes": "0.x",
     "effector": "23.x",

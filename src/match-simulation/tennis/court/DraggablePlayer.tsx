@@ -54,16 +54,18 @@ export const DraggablePlayer = memo<Props>(({ x, y, width, height, basePath, cou
         arrow
         open={openConfig}
         placement="top"
-        PopperProps={{
-          popperOptions: {
-            modifiers: [
-              {
-                name: 'preventOverflow',
-                options: {
-                  boundary: courtAreaRef.current,
+        slotProps={{
+          popper: {
+            popperOptions: {
+              modifiers: [
+                {
+                  name: 'preventOverflow',
+                  options: {
+                    boundary: courtAreaRef.current,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
         }}
       >
@@ -113,12 +115,12 @@ export const DraggablePlayer = memo<Props>(({ x, y, width, height, basePath, cou
                 x={
                   pTrade.tradeOrder === tradeOrder - 1
                     ? x
-                    : prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.player.x ?? 0
+                    : (prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.player.x ?? 0)
                 }
                 y={
                   pTrade.tradeOrder === tradeOrder - 1
                     ? y
-                    : prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.player.y ?? 0
+                    : (prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.player.y ?? 0)
                 }
               />
             </>

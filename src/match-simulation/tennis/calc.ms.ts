@@ -1,5 +1,5 @@
 import { TennisTrade, TennisTradePayload } from '@core/contracts';
-import { attach, combine, forward } from 'effector';
+import { attach, combine, sample } from 'effector';
 import { msD } from './api/domain.ms';
 import { extractCombinedKey } from './calculations/operations';
 import { calcDefaultItemsPositions, convertUnityTradeToState } from './calculations/worker';
@@ -82,12 +82,12 @@ $msUI.on(calcMSUIValues.doneData, (state, data) =>
 
 export const calcsLoading = combine([calcMSUIValues.pending, calcDefaultPositions.pending], ([a, b]) => a || b);
 
-forward({
-  from: [addDefaultTrade, setDragItemCoordinates],
-  to: calcMSUIValues,
+sample({
+  clock: [addDefaultTrade, setDragItemCoordinates],
+  target: calcMSUIValues,
 });
 
-forward({
-  from: [calcDefaultPositions.doneData],
-  to: addDefaultTrade,
+sample({
+  clock: calcDefaultPositions.doneData,
+  target: addDefaultTrade,
 });

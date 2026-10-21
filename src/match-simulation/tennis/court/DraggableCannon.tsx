@@ -43,7 +43,7 @@ export const DraggableCannon = memo<Props>(({ x, y, basePath }) => {
   return (
     <img
       src={`${basePath}imgs/tennis-courts/cannon.svg`}
-      alt="tennis player"
+      alt="tennis cannon"
       width="50px"
       height="54px"
       className={clsx(

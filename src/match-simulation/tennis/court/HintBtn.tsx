@@ -32,20 +32,22 @@ export const HintBtn = memo<{ courtAreaRef: RefObject<HTMLDivElement> }>(({ cour
         arrow
         open={open}
         placement="top"
-        PopperProps={{
-          popperOptions: {
-            modifiers: [
-              {
-                name: 'preventOverflow',
-                options: {
-                  boundary: courtAreaRef.current,
+        slotProps={{
+          popper: {
+            popperOptions: {
+              modifiers: [
+                {
+                  name: 'preventOverflow',
+                  options: {
+                    boundary: courtAreaRef.current,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
         }}
       >
-        <IconButton ref={btnRef} onClick={() => setOpen(v => !v)} size="s" color="secondary">
+        <IconButton aria-label="Court hint" ref={btnRef} onClick={() => setOpen(v => !v)} size="s" color="secondary">
           <InfoIcon color={themeVars.colors.white} />
         </IconButton>
       </FormTooltip>

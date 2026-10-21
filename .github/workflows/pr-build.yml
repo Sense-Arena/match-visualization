@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  run-linters:
+  checks:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,7 +25,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: latest
           run_install: false
 
       - name: Get pnpm store directory
@@ -45,10 +45,16 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install Node modules
-        run: pnpm i
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
-      - name: Run linters
-        run: pnpm lint
+      - name: Build and test npm package
+        run: pnpm test:package
 
-      - name: Run build
-        run: pnpm build
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test court interactions
+        run: pnpm test:storybook

@@ -1,0 +1,10 @@
+# pnpm 12 reads project settings here instead of .npmrc.
+nodeLinker: hoisted
+strictPeerDependencies: true
+
+# Temporary: install the latest releases already selected in pnpm-lock.yaml.
+minimumReleaseAge: 0
+
+# Only esbuild needs an install script for its platform binary.
+allowBuilds:
+  esbuild: true

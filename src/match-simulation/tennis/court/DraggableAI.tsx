@@ -53,16 +53,18 @@ export const DraggableAI = memo<Props>(({ x, y, width, height, basePath, courtAr
         title={<OpponentConfigForm />}
         arrow
         open={openConfig}
-        PopperProps={{
-          popperOptions: {
-            modifiers: [
-              {
-                name: 'preventOverflow',
-                options: {
-                  boundary: courtAreaRef.current,
+        slotProps={{
+          popper: {
+            popperOptions: {
+              modifiers: [
+                {
+                  name: 'preventOverflow',
+                  options: {
+                    boundary: courtAreaRef.current,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
         }}
       >
@@ -111,12 +113,12 @@ export const DraggableAI = memo<Props>(({ x, y, width, height, basePath, courtAr
                 x={
                   pTrade.tradeOrder === tradeOrder - 1
                     ? x
-                    : prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.opponent.x ?? 0
+                    : (prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.opponent.x ?? 0)
                 }
                 y={
                   pTrade.tradeOrder === tradeOrder - 1
                     ? y
-                    : prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.opponent.y ?? 0
+                    : (prevTrades.find(t => t.tradeOrder === pTrade.tradeOrder + 1)?.trade.coords.opponent.y ?? 0)
                 }
               />
             </>
