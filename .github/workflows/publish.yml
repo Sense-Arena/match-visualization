@@ -61,4 +61,7 @@ jobs:
         run: pnpm test:storybook
 
       - name: Publish package on NPM 📦
-        run: npm publish
+        uses: JS-DevTools/npm-publish@v4
+        with:
+          access: public
+          ignore-scripts: 'false'
